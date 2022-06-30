@@ -1,16 +1,25 @@
 <script lang="ts" setup>
-import { onBeforeMount, ref } from "vue";
+import { onMounted, ref } from "vue";
 import RestaurantCard from "../components/RestaurantCard.vue";
-import { exampleData, LeckerLog } from '../types/types';
+import { LeckerLog } from '../types/types';
+import { db } from '../firebase';
+import { collection, query, where, getDocs } from "firebase/firestore";
 
-const data = ref<LeckerLog[]>([]);
-onBeforeMount(() => {
-   const dataString = localStorage.getItem('data') || '[]';
-   data.value = JSON.parse(dataString);
-})
+const allEntries = ref<any>([]);
+
+onMounted(async () => {
+    const q = query(collection(db, "entries"), where("userId", "==", 'test'));
+
+    const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        allEntries.value.push(doc.data());
+    });
+});
+
 </script>
 <template>
-    <div v-if="exampleData.length > 0" class="flex flex-col gap-4 m-auto p-2">
-        <RestaurantCard v-for="(entry, index) in data" :key="`${index}-entry`" :lecker-log="entry" />
+    <div v-if="allEntries.length > 0" class="flex flex-col gap-4 m-auto p-2">
+        <RestaurantCard v-for="(entry, index) in allEntries" :key="`${index}-entry`" :lecker-log="entry" />
     </div>
 </template>

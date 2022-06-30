@@ -1,42 +1,19 @@
-export interface Meal {
+export interface FoodOrdered {
     name: string;
     rating: number;
-    imageUrl?: string;
+    imagePath?: string;
+    dateOrdered?: string;
+    comment: string;
+}
+
+export interface Restaurant {
+    name: string;
+    dateCreated?: Date;
+    foodOrdered: FoodOrdered[];
+    cuisine: string;
 }
 
 export interface LeckerLog {
-    restaurant: string;
-    cuisine: string;
-    meals: Meal[];
+    userId: string;
+    restaurant: Restaurant;
 }
-
-export const exampleData: LeckerLog[] = [
-    {
-        restaurant: 'Burgertime',
-        cuisine: 'Burger',
-        meals: [
-            {
-                name: 'Cheeseburger',
-                rating: 5,
-            },
-            {
-                name: 'Veggieburger',
-                rating: 4,
-            },
-        ]
-    },
-    {
-        restaurant: 'Mangiare',
-        cuisine: 'Italienisch',
-        meals: [
-            {
-                name: 'Pizza Hawaii',
-                rating: 2,
-            },
-            {
-                name: 'Pizza Mozzarella',
-                rating: 4,
-            },
-        ]
-    },
-]
