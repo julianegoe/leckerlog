@@ -3,12 +3,12 @@ import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyAwLrq8bXpR7la5EhSEfCSMWxNpJNs1r14",
-    authDomain: "leckerlog.firebaseapp.com",
-    projectId: "leckerlog",
-    storageBucket: "leckerlog.appspot.com",
-    messagingSenderId: "218172068678",
-    appId: "1:218172068678:web:9c6a1fd7066f0659b88b47",
+    apiKey: import.meta.env.VITE_API_KEY,
+    authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_APP_ID,
   };
 
 
