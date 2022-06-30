@@ -1,10 +1,16 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import DisplayFood from '/src/views/DisplayFood.vue'
+import DisplayRestaurants from '/src/views/DisplayRestaurants.vue'
 const routes = [
     {
         path: '/',
         name: 'Home',
-        component: DisplayFood,
+        component: DisplayRestaurants,
+    },
+    {
+        path: '/food/:id',
+        name: 'Food',
+        component: () => import(/* webpackChunkName: "output" */ '../views/DisplayFood.vue'),
+        props: true,
     },
     {
         path: '/add',

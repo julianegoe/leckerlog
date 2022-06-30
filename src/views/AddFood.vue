@@ -1,22 +1,23 @@
 <script lang="ts" setup>
 import { computed, } from 'vue';
 import AppTextInput from '../components/AppTextInput.vue';
-import type { LeckerLog } from '../types/types';
 import AppNumberInput from '../components/AppNumberInput.vue';
-import AppDateInput from '../components/AppDateInput.vue';
 import { addFoodToData } from '../services/DataService';
+import { LeckerLog } from '../types/types';
 
 const inputValues = computed<LeckerLog>(() => (
   {
-    userId: 'test',
     restaurant: {
+      restaurantId: '',
       name: '',
+      userId: 'test',
+      cuisine: '',
       foodOrdered: [{
+        userId: 'test',
         name: '',
         rating: 0,
         comment: '',
       }],
-      cuisine: '',
     }, 
   }
 ));

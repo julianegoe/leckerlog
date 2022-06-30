@@ -4,7 +4,7 @@ import { computed } from 'vue';
 
 const props = defineProps<{
     menuItem: string;
-    imageUrl: string;
+    imageUrl?: string;
     rating: number;
     comment?: string;
     date?: string;
@@ -29,7 +29,7 @@ const localeDateString = computed(() => {
         <div class="pt-2">{{ comment }}</div>
     </div>
     <div class="w-1/2">
-        <img class="object-fit" :src="imageUrl" :alt="menuItem" />
+        <img class="object-fit" src="https://via.placeholder.com/150x150" :alt="menuItem" />
     </div>
 </div>
 </template>

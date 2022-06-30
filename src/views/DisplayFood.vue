@@ -1,25 +1,37 @@
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
-import RestaurantCard from "../components/RestaurantCard.vue";
-import { LeckerLog } from '../types/types';
+import { onMounted, reactive } from 'vue';
 import { db } from '../firebase';
 import { collection, query, where, getDocs } from "firebase/firestore";
+import { FoodOrdered } from '../types/types';
+import FoodCard from '../components/FoodCard.vue';
 
-const allEntries = ref<any>([]);
+const props = defineProps<{
+    id: string;
+    restaurant: string;
+}>();
 
-onMounted(async () => {
-    const q = query(collection(db, "entries"), where("userId", "==", 'test'));
+const allFoodDocuments = reactive<FoodOrdered[]>([])
+
+    onMounted(async () => {
+    const restaurantsRef = collection(db, `Restaurants/${props.id}/foodOrdered`);
+    const q = query(restaurantsRef, where("userId", "==", 'test'));
 
     const querySnapshot = await getDocs(q);
         querySnapshot.forEach((doc) => {
         // doc.data() is never undefined for query doc snapshots
-        allEntries.value.push(doc.data());
+        allFoodDocuments.push(doc.data() as FoodOrdered);
+        console.log(allFoodDocuments);
     });
 });
-
 </script>
 <template>
-    <div v-if="allEntries.length > 0" class="flex flex-col gap-4 m-auto p-2">
-        <RestaurantCard v-for="(entry, index) in allEntries" :key="`${index}-entry`" :lecker-log="entry" />
+<header class="flex items-center p-2">
+    <div class="pr-2">
+        <RouterLink :to="{name: 'Home'}">Zurück</RouterLink>
     </div>
+    <div class="font-bold text-lg">{{ restaurant }}</div>
+</header>
+<div class="flex flex-col gap-4 m-auto p-2">
+    <FoodCard v-for="(food, index) in allFoodDocuments" :key="`${index}-${food.name}`" :menu-item="food.name" :rating="food.rating" />
+</div>    
 </template>
