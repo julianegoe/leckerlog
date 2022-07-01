@@ -6,9 +6,11 @@ import { useUser } from '../store/user';
 import GoogleSignInButton from '../components/GoogleSignInButton.vue';
 import AppSignInButton from '../components/AppSignInButton.vue';
 import { GoogleAuthProvider } from "firebase/auth";
+import { useRouter } from 'vue-router';
 
 
-const userStore = useUser()
+const userStore = useUser();
+const router = useRouter();
 
 const currentUser = computed(() => {
     return auth.currentUser;
@@ -44,8 +46,8 @@ const signInWithGoogle = () => {
     signInWithPopup(auth, provider)
   .then((result) => {
     // This gives you a Google Access Token. You can use it to access the Google API.
-    const credential = GoogleAuthProvider.credentialFromResult(result);
-    const token = credential?.accessToken;
+    /* const credential = GoogleAuthProvider.credentialFromResult(result); */
+    /* const token = credential?.accessToken; */
     const user = result.user;
     /* if (currentUser.value) {
         const credential = GoogleAuthProvider.credential(token);
@@ -62,7 +64,8 @@ const signInWithGoogle = () => {
           userId: user.uid,
           displayName: user.displayName || '',
           email: user.email || '',
-        })
+        });
+      router.push({name: 'Home'});
   }).catch((error) => {
     // Handle Errors here.
     const errorCode = error.code;
@@ -85,9 +88,7 @@ const signInWithGoogle = () => {
     </RouterLink>
   </div> -->
   <div>
-    <RouterLink :to="{ name: 'Home'}">
-        <GoogleSignInButton @click="signInWithGoogle" />
-    </RouterLink>
+      <GoogleSignInButton @click="signInWithGoogle" />
   </div>
   </div>
 </template>
