@@ -4,6 +4,9 @@ import { db } from '../firebase';
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { FoodOrdered } from '../types/types';
 import FoodCard from '../components/FoodCard.vue';
+import { useUser } from '../store/user';
+
+const userStore = useUser()
 
 const props = defineProps<{
     id: string;
@@ -14,13 +17,12 @@ const allFoodDocuments = reactive<FoodOrdered[]>([])
 
     onMounted(async () => {
     const restaurantsRef = collection(db, `Restaurants/${props.id}/foodOrdered`);
-    const q = query(restaurantsRef, where("userId", "==", 'test'));
+    const q = query(restaurantsRef, where("userId", "==", userStore.userId));
 
     const querySnapshot = await getDocs(q);
         querySnapshot.forEach((doc) => {
         // doc.data() is never undefined for query doc snapshots
         allFoodDocuments.push(doc.data() as FoodOrdered);
-        console.log(allFoodDocuments);
     });
 });
 </script>

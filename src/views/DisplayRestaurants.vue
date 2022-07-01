@@ -4,11 +4,14 @@ import RestaurantCard from "../components/RestaurantCard.vue";
 import { db } from '../firebase';
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { Restaurant } from "../types/types";
+import { useUser } from "../store/user";
+
+const userStore = useUser();
 
 const allEntries = ref<any[]>([]);
 
 onMounted(async () => {
-    const q = query(collection(db, "Restaurants"), where("userId", "==", 'test'));
+    const q = query(collection(db, "Restaurants"), where("userId", "==", userStore.userId));
 
     const querySnapshot = await getDocs(q);
         querySnapshot.forEach((doc) => {

@@ -4,16 +4,19 @@ import AppTextInput from '../components/AppTextInput.vue';
 import AppNumberInput from '../components/AppNumberInput.vue';
 import { addFoodToData } from '../services/DataService';
 import { LeckerLog } from '../types/types';
+import { useUser } from '../store/user';
+
+const userStore = useUser()
 
 const inputValues = computed<LeckerLog>(() => (
   {
     restaurant: {
       restaurantId: '',
       name: '',
-      userId: 'test',
+      userId: userStore.userId,
       cuisine: '',
       foodOrdered: [{
-        userId: 'test',
+        userId: userStore.userId,
         name: '',
         rating: 0,
         comment: '',

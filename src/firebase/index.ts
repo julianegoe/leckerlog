@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { connectAuthEmulator, getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -16,6 +16,7 @@ const firebase = initializeApp(firebaseConfig)
 
 // utils
 const auth = getAuth();
+/* connectAuthEmulator(auth, 'http://localhost:3000/'); */
 const db = getFirestore(firebase);
 auth.languageCode = 'de';
 

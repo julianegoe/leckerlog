@@ -1,10 +1,16 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useUser } from '../store/user';
 import DisplayRestaurants from '/src/views/DisplayRestaurants.vue'
 const routes = [
     {
         path: '/',
         name: 'Home',
         component: DisplayRestaurants,
+    },
+    {
+        path: '/login',
+        name: 'Login',
+        component: () => import(/* webpackChunkName: "output" */ '../views/Login.vue'),
     },
     {
         path: '/food/:id',
@@ -22,4 +28,14 @@ const router = createRouter({
     history: createWebHistory(),
     routes,
 })
+router.beforeEach(async (to, from) => {
+    const userStore = useUser()
+    if (to.name !== 'Login' && !userStore.isAuthenticated) {
+        return { name: 'Login' };
+      }
+      return true;
+    
+  })
+  
+  
 export default router
