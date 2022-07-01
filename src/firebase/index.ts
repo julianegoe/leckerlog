@@ -1,6 +1,9 @@
 import { initializeApp } from "firebase/app";
-import { connectAuthEmulator, getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import {  getAuth } from "firebase/auth";
+import { getFirestore, disableNetwork, enableNetwork, enableIndexedDbPersistence } from "firebase/firestore";
+import { useNetwork } from '@vueuse/core'
+
+const { isOnline } = useNetwork()
 
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_API_KEY,
@@ -19,6 +22,22 @@ const auth = getAuth();
 /* connectAuthEmulator(auth, 'http://localhost:3000/'); */
 const db = getFirestore(firebase);
 auth.languageCode = 'de';
+
+enableIndexedDbPersistence(db)
+  .catch((err) => {
+    console.log(err.code);
+      if (err.code == 'failed-precondition') {
+          // Multiple tabs open, persistence can only be enabled
+          // in one tab at a a time.
+          // ...
+      } else if (err.code == 'unimplemented') {
+          // The current browser does not support all of the
+          // features required to enable persistence
+          // ...
+      }
+  });
+
+  
 
 // export utils/refs
 export {

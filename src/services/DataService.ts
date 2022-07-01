@@ -1,5 +1,5 @@
 import { db } from '../firebase';
-import { collection, getDocs, where, query, addDoc } from "firebase/firestore";
+import { collection, getDocs, where, query, addDoc, Timestamp } from "firebase/firestore";
 import { LeckerLog } from '../types/types';
 import { useUser } from '../store/user';
 
@@ -19,7 +19,10 @@ export const addFoodToData = async (newEntry: LeckerLog) => {
     if (restaurantId) {
         const pathToFood = `Restaurants/${restaurantId}/foodOrdered`
         try {
-            await addDoc(collection(db, pathToFood), newEntry.restaurant.foodOrdered[0]);
+            await addDoc(collection(db, pathToFood), {
+                ...newEntry.restaurant.foodOrdered[0],
+                dateCreated: Timestamp.fromDate(new Date(newEntry.restaurant.foodOrdered[0].dateCreated))
+            });
             window.alert('Gericht hinzugefügt')
         } catch(error) {
             console.log(error)
@@ -30,6 +33,7 @@ export const addFoodToData = async (newEntry: LeckerLog) => {
             name: newEntry.restaurant.name,
             cuisine: newEntry.restaurant.cuisine,
             userId: newEntry.restaurant.userId,
+            dateCreated: newEntry.restaurant.dateCreated,
         });
         try {
             await addDoc(collection(db, `Restaurants/${docRef.id}/foodOrdered`), newEntry.restaurant.foodOrdered[0])

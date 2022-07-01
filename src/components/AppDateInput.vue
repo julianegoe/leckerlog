@@ -1,16 +1,17 @@
 <script lang="ts" setup>
+import { Timestamp } from '@firebase/firestore';
 import { ref } from 'vue';
 
 const props = defineProps<{
     label: string;
     id: string;
-    modelValue: string;
+    modelValue: string | null;
 }>()
 const emit = defineEmits(['update:modelValue']);
 
-const inputValue = ref<string>(props.modelValue);
-const updateInput = (value: string) => {
-    emit('update:modelValue', value);
+const inputValue = ref<string | null>(props.modelValue);
+const updateInput = (value: string | null) => {
+    emit('update:modelValue',value);
 }
 </script>
 <template>

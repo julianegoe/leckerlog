@@ -1,39 +1,30 @@
 <script lang="ts" setup>
-import { onMounted, reactive } from 'vue';
-import { db } from '../firebase';
-import { collection, query, where, getDocs } from "firebase/firestore";
-import { FoodOrdered } from '../types/types';
+import { onBeforeMount } from 'vue';
 import FoodCard from '../components/FoodCard.vue';
-import { useUser } from '../store/user';
+import BackIcon from '../assets/icons/chevron-left.svg';
+import { useFood } from '../store/food';
 
-const userStore = useUser()
+const foodStore = useFood();
 
 const props = defineProps<{
     id: string;
     restaurant: string;
 }>();
 
-const allFoodDocuments = reactive<FoodOrdered[]>([])
-
-    onMounted(async () => {
-    const restaurantsRef = collection(db, `Restaurants/${props.id}/foodOrdered`);
-    const q = query(restaurantsRef, where("userId", "==", userStore.userId));
-
-    const querySnapshot = await getDocs(q);
-        querySnapshot.forEach((doc) => {
-        // doc.data() is never undefined for query doc snapshots
-        allFoodDocuments.push(doc.data() as FoodOrdered);
-    });
+onBeforeMount(async () => {
+    foodStore.getFoodOrdered(props.id);
 });
 </script>
 <template>
 <header class="flex items-center p-2">
     <div class="pr-2">
-        <RouterLink :to="{name: 'Home'}">Zurück</RouterLink>
+        <RouterLink :to="{name: 'Home'}">
+            <BackIcon class="hover:transition-transform hover:scale-125 hover:ease-in" />
+        </RouterLink>
     </div>
     <div class="font-bold text-lg">{{ restaurant }}</div>
 </header>
-<div class="flex flex-col gap-4 m-auto p-2">
-    <FoodCard v-for="(food, index) in allFoodDocuments" :key="`${index}-${food.name}`" :menu-item="food.name" :rating="food.rating" />
+<div v-if="!foodStore.getFoodIsLoading" class="flex flex-col gap-4 m-auto p-2">
+    <FoodCard v-for="(food, index) in foodStore.foodOrdered" :key="`${index}-${food.name}`" :menu-item="food.name" :rating="food.rating" :comment="food.comment" :date="food.dateCreated" />
 </div>    
 </template>

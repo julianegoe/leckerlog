@@ -5,28 +5,21 @@ import { db } from '../firebase';
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { useUser } from "../store/user";
 import AppEmptyState from "../components/AppEmptyState.vue";
+import { useFood } from "../store/food";
 
 const userStore = useUser();
+const foodStore = useFood();
 
 const allEntries = ref<any[]>([]);
 
 onMounted(async () => {
-    const q = query(collection(db, "Restaurants"), where("userId", "==", userStore.userId));
-
-    const querySnapshot = await getDocs(q);
-        querySnapshot.forEach((doc) => {
-        // doc.data() is never undefined for query doc snapshots
-        allEntries.value.push({
-            ...doc.data(),
-            restaurantId: doc.id,
-        });
-    });
+    foodStore.getRestaurants();
 });
 
 </script>
 <template>
-    <div v-if="allEntries.length > 0" class="flex flex-col gap-4 m-auto p-2">
-        <RestaurantCard v-for="(entry, index) in allEntries" :key="`${index}-entry`" :lecker-log="entry" :doc-id="entry.restaurantId" />
+    <div v-if="!foodStore.getRestaurantsIsLoading" class="flex flex-col gap-4 m-auto p-2">
+        <RestaurantCard v-for="(entry, index) in foodStore.restaurants" :key="`${index}-entry`" :lecker-log="entry" :doc-id="entry.restaurantId" />
     </div>
     <AppEmptyState v-else />
 </template>
