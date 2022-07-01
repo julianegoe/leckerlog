@@ -18,3 +18,12 @@ const updateInput = (value: string | null) => {
     <label class="relative -bottom-3 left-4 px-1 bg-white text-sm" :for="id">{{ label }}</label>
     <input  @change="updateInput(inputValue)" v-model="inputValue" :id="id" :ame="id" class="py-2 px-4 border border-black w-full" type="date" />
 </template>
+<style scoped>
+    input[type="date"]
+{
+    display:block;
+    -webkit-appearance: textfield;
+    -moz-appearance: textfield;
+    min-height: 1.2em;
+}
+</style>
