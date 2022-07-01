@@ -3,8 +3,8 @@ import { onMounted, ref } from "vue";
 import RestaurantCard from "../components/RestaurantCard.vue";
 import { db } from '../firebase';
 import { collection, query, where, getDocs } from "firebase/firestore";
-import { Restaurant } from "../types/types";
 import { useUser } from "../store/user";
+import AppEmptyState from "../components/AppEmptyState.vue";
 
 const userStore = useUser();
 
@@ -28,4 +28,5 @@ onMounted(async () => {
     <div v-if="allEntries.length > 0" class="flex flex-col gap-4 m-auto p-2">
         <RestaurantCard v-for="(entry, index) in allEntries" :key="`${index}-entry`" :lecker-log="entry" :doc-id="entry.restaurantId" />
     </div>
+    <AppEmptyState v-else />
 </template>
