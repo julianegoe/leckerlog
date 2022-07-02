@@ -1,13 +1,14 @@
 <script lang="ts" setup>
 import { onMounted, watch } from 'vue';
 import { ref } from 'vue';
-import { AutocompletePrediction } from '../types/types';
+import { loadScript } from 'vue-plugin-load-script';
 
 const restaurantRef = ref();
 const restaurant = ref('');
 const googlePredictions = ref<any>([]);
 
 onMounted(async () => {
+    await loadScript(`https://maps.googleapis.com/maps/api/js?key=${import.meta.env.VITE_GOOGLE_API}&libraries=places`)
     const service = new google.maps.places.AutocompleteService();
     watch(restaurant, () => {
         service.getPlacePredictions({
