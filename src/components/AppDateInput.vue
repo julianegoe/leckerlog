@@ -16,7 +16,7 @@ const updateInput = (value: string | null) => {
 </script>
 <template>
     <label class="relative -bottom-3 left-4 px-1 bg-white text-sm" :for="id">{{ label }}</label>
-    <input  @change="updateInput(inputValue)" v-model="inputValue" :id="id" :ame="id" class="py-2 px-4 border border-black w-full" type="date" />
+    <input  @change="updateInput(inputValue)" v-model="inputValue" :id="id" :ame="id" class="py-2 px-4 border border-black w-full" type="date" placeholder="dd-mm-yyyy" />
 </template>
 <style scoped>
     input[type="date"]
