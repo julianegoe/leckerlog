@@ -14,7 +14,7 @@ onMounted(async () => {
         service.getPlacePredictions({
             input: restaurant.value,
             componentRestrictions: { country: 'de' },
-            types: ['restaurant', 'cafe', 'night_club', 'bakery'],
+            types: ['restaurant', 'cafe', 'night_club', 'bakery', 'food'],
         }, (predictions: any, status: string) => {
             if (status === 'OK') {
                 googlePredictions.value = predictions;
@@ -47,7 +47,9 @@ const handleSelection = (value: string) => {
         <input id="autocomplete" type="text" :ref="restaurantRef" v-model="restaurant" :id="id"
             @input="(value) => $emit('update:restaurant', value)" class="py-2 px-4 border border-black w-full" />
         <div v-if="googlePredictions.length > 0" class="border border-black">
-            <div class="cursor-pointer hover:bg-gray-200 p-2" @click="handleSelection(prediction.structured_formatting.main_text)" v-for="(prediction, index) in googlePredictions" :key="prediction.place_id">
+            <div class="cursor-pointer hover:bg-gray-200 p-2"
+                @click="handleSelection(prediction.structured_formatting.main_text)"
+                v-for="(prediction, index) in googlePredictions" :key="prediction.place_id">
                 <div>{{ prediction.structured_formatting.main_text }}</div>
                 <div class="text-xs text-gray-400">{{ prediction.structured_formatting.secondary_text }}</div>
             </div>
