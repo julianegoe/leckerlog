@@ -48,5 +48,6 @@ const addFood = () => {
             <AppTextInput v-model="inputValues.restaurant.foodOrdered[0].comment" label="Kommentar" id="comment-input"/>
             <button class="mt-4 p-2 border border-black" type="submit">Hinzufügen</button>
         </form>
+        <input type="file" />
     </div>
 </template>
