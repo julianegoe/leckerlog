@@ -18,13 +18,16 @@ const localeDateString = computed(() => {
     }
 });
 
+const loadingImage = vref(true);
 const imageUrl = vref('');
 const getImageUrl = (fileName: string) => {
   const storage = getStorage();
+  loadingImage.value = true;
   if (props.fileName) {
     getDownloadURL(ref(storage, `images/${fileName.split('.')[0]}_200x200.jpeg`))
         .then((url) => {
           imageUrl.value = url;
+          loadingImage.value = false;
         })
         .catch((error) => {
           console.log(error)
@@ -53,8 +56,11 @@ onMounted(() => {
         </div>
         <div v-if="comment" class="pt-2">"{{ comment }}"</div>
     </div>
-    <div v-if="fileName" class="w-1/2">
+    <div v-if="!loadingImage" class="w-1/2">
         <img class="object-fill" :src="imageUrl" :alt="menuItem" />
+    </div>
+    <div v-else-if="fileName && loadingImage" class="w-1/2">
+      <div class="object-fit max-w-[1500px] h-[100px] bg-gray-100 animate-pulse"></div>
     </div>
 </div>
 </template>
