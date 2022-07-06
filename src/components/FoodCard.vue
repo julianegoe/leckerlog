@@ -22,7 +22,7 @@ const imageUrl = vref('');
 const getImageUrl = (fileName: string) => {
   const storage = getStorage();
   if (props.fileName) {
-    getDownloadURL(ref(storage, `images/${fileName}`))
+    getDownloadURL(ref(storage, `images/${fileName.split('.')[0]}_200x200.jpeg`))
         .then((url) => {
           imageUrl.value = url;
         })
@@ -54,7 +54,7 @@ onMounted(() => {
         <div v-if="comment" class="pt-2">"{{ comment }}"</div>
     </div>
     <div v-if="fileName" class="w-1/2">
-        <img class="object-fit" :src="imageUrl" :alt="menuItem" />
+        <img class="object-fill" :src="imageUrl" :alt="menuItem" />
     </div>
 </div>
 </template>
