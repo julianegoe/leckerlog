@@ -24,13 +24,16 @@ const getImageUrl = (fileName: string) => {
   const storage = getStorage();
   loadingImage.value = true;
   if (props.fileName) {
-    getDownloadURL(ref(storage, `images/${fileName.split('.')[0]}_200x200.jpeg`))
+    getDownloadURL(ref(storage, `images/${fileName.split('.')[0]}_200x200.${fileName.split('.')[1]}`))
         .then((url) => {
           imageUrl.value = url;
           loadingImage.value = false;
         })
         .catch((error) => {
           console.log(error)
+          if (error.code === 'storage/object-not-found') {
+            console.log('retry')
+          }
           return '#'
         });
   };
