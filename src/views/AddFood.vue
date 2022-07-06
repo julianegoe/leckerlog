@@ -51,7 +51,9 @@ const handlePhotoChange = (e: any) => {
 };
 const addFood = () => {
   const imageRef = ref(storage, `images/${inputValues.value.restaurant.foodOrdered[0].fileName}`);
-  uploadBytes(imageRef, arrayBuffer.value ).then((snapshot) => {
+  uploadBytes(imageRef, arrayBuffer.value, {
+    contentType: 'image/jpeg',
+  }).then((snapshot) => {
     console.log('Uploaded a blob or file!', snapshot);
   });
     addFoodToData(inputValues.value);
