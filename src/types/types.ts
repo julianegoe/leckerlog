@@ -4,7 +4,7 @@ export interface FoodOrdered {
     name: string;
     rating: number;
     fileName?: string;
-    dateCreated?: string;
+    dateCreated: string;
     comment: string;
 }
 
