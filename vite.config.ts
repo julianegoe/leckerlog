@@ -7,9 +7,6 @@ import { VitePWA } from 'vite-plugin-pwa'
 export default defineConfig({
   base: './',
   plugins: [vue(), svgLoader(), VitePWA({
-    strategies: 'injectManifest',
-    srcDir: 'src',
-    filename: 'service-worker.js',
     registerType: 'autoUpdate',
     devOptions: {
       enabled: true
