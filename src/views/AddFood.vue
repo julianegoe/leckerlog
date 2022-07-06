@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import {computed, onMounted, ref as vref, VueElement} from 'vue';
+import {computed, ref as vref} from 'vue';
 import AppTextInput from '../components/AppTextInput.vue';
 import AppNumberInput from '../components/AppNumberInput.vue';
 import { addFoodToData } from '../services/DataService';
 import { LeckerLog } from '../types/types';
 import { useUser } from '../store/user';
 import { storage } from '../firebase/index';
-import {getStorage, ref, uploadBytes} from "firebase/storage";
+import { ref, uploadBytes} from "firebase/storage";
 import { Timestamp } from 'firebase/firestore';
 import AppDateInput from '../components/AppDateInput.vue';
 import GooglePlacesTextInput from '../components/GooglePlacesTextInput.vue';

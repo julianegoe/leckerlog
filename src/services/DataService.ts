@@ -21,7 +21,7 @@ export const addFoodToData = async (newEntry: LeckerLog) => {
         try {
             await addDoc(collection(db, pathToFood), {
                 ...newEntry.restaurant.foodOrdered[0],
-                dateCreated: Timestamp.fromDate(new Date(newEntry.restaurant.foodOrdered[0].dateCreated))
+                dateCreated: newEntry.restaurant.foodOrdered[0].dateCreated,
             });
             window.alert('Gericht hinzugefügt')
         } catch(error) {
