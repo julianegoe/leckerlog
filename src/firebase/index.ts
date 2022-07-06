@@ -1,7 +1,8 @@
 import { initializeApp } from "firebase/app";
 import {  getAuth } from "firebase/auth";
 import { getFirestore, disableNetwork, enableNetwork, enableIndexedDbPersistence } from "firebase/firestore";
-import { useNetwork } from '@vueuse/core'
+import { useNetwork } from '@vueuse/core';
+import { getStorage, ref } from "firebase/storage";
 
 const { isOnline } = useNetwork()
 
@@ -19,11 +20,12 @@ const firebase = initializeApp(firebaseConfig)
 
 // utils
 const auth = getAuth();
+const storage = getStorage();
 /* connectAuthEmulator(auth, 'http://localhost:3000/'); */
 const db = getFirestore(firebase);
 auth.languageCode = 'de';
 
-enableIndexedDbPersistence(db)
+/*enableIndexedDbPersistence(db)
   .catch((err) => {
     console.log(err.code);
       if (err.code == 'failed-precondition') {
@@ -35,13 +37,14 @@ enableIndexedDbPersistence(db)
           // features required to enable persistence
           // ...
       }
-  });
+  });*/
 
-  
+
 
 // export utils/refs
 export {
     auth,
     db,
     firebase,
+    storage,
 }

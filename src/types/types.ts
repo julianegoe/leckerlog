@@ -3,8 +3,8 @@ import type { Timestamp } from "firebase/firestore";
 export interface FoodOrdered {
     name: string;
     rating: number;
-    imagePath?: string;
-    dateCreated?: any;
+    fileName?: string;
+    dateCreated?: string;
     comment: string;
 }
 

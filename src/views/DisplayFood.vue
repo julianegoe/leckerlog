@@ -12,7 +12,7 @@ const props = defineProps<{
 }>();
 
 onBeforeMount(async () => {
-    foodStore.getFoodOrdered(props.id);
+    await foodStore.getFoodOrdered(props.id);
 });
 </script>
 <template>
@@ -25,6 +25,6 @@ onBeforeMount(async () => {
     <div class="font-bold text-lg">{{ restaurant }}</div>
 </header>
 <div v-if="!foodStore.getFoodIsLoading" class="flex flex-col gap-4 m-auto p-2">
-    <FoodCard v-for="(food, index) in foodStore.foodOrdered" :key="`${index}-${food.name}`" :menu-item="food.name" :rating="food.rating" :comment="food.comment" :date="food.dateCreated" />
-</div>    
+    <FoodCard v-for="(food, index) in foodStore.foodOrdered" :key="`${index}-${food.name}`" :menu-item="food.name" :rating="food.rating" :comment="food.comment" :date="food.dateCreated" :file-name="food.fileName" />
+</div>
 </template>

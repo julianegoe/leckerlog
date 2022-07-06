@@ -1,11 +1,12 @@
 <script lang="ts" setup>
-import { computed, onMounted, } from 'vue';
+import {computed, onMounted, ref as vref, VueElement} from 'vue';
 import AppTextInput from '../components/AppTextInput.vue';
 import AppNumberInput from '../components/AppNumberInput.vue';
 import { addFoodToData } from '../services/DataService';
 import { LeckerLog } from '../types/types';
 import { useUser } from '../store/user';
-import { db, firebase } from '../firebase/index';
+import { storage } from '../firebase/index';
+import {getStorage, ref, uploadBytes} from "firebase/storage";
 import { Timestamp } from 'firebase/firestore';
 import AppDateInput from '../components/AppDateInput.vue';
 import GooglePlacesTextInput from '../components/GooglePlacesTextInput.vue';
@@ -22,16 +23,37 @@ const inputValues = computed<LeckerLog>(() => (
       cuisine: '',
       foodOrdered: [{
         userId: userStore.userId,
-        dateCreated: null,
+        dateCreated: '',
         name: '',
         rating: 0,
         comment: '',
+        fileName: '',
       }],
-    }, 
+    },
   }
 ));
 
+const arrayBuffer = vref();
+const handlePhotoChange = (e: any) => {
+  const fileList = e.target?.files;
+  inputValues.value.restaurant.foodOrdered[0].fileName = fileList[0].name;
+  // Check if the file is an image.
+  if (fileList[0].type && !fileList[0].type.startsWith('image/')) {
+    console.log('File is not an image.', fileList[0].type, fileList[0]);
+    return;
+  }
+  const reader = new FileReader();
+  reader.readAsArrayBuffer(fileList[0])
+  reader.addEventListener('load', (event) => {
+    const result = event.target?.result;
+    arrayBuffer.value = result;
+  });
+};
 const addFood = () => {
+  const imageRef = ref(storage, `images/${inputValues.value.restaurant.foodOrdered[0].fileName}`);
+  uploadBytes(imageRef, arrayBuffer.value ).then((snapshot) => {
+    console.log('Uploaded a blob or file!', snapshot);
+  });
     addFoodToData(inputValues.value);
 };
 
@@ -48,6 +70,6 @@ const addFood = () => {
             <AppTextInput v-model="inputValues.restaurant.foodOrdered[0].comment" label="Kommentar" id="comment-input"/>
             <button class="mt-4 p-2 border border-black" type="submit">Hinzufügen</button>
         </form>
-        <input type="file" />
+        <input type="file" @change="handlePhotoChange" accept="image/png, image/jpeg" />
     </div>
 </template>

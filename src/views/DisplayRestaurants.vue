@@ -7,10 +7,7 @@ import { useUser } from "../store/user";
 import AppEmptyState from "../components/AppEmptyState.vue";
 import { useFood } from "../store/food";
 
-const userStore = useUser();
 const foodStore = useFood();
-
-const allEntries = ref<any[]>([]);
 
 onMounted(async () => {
     foodStore.getRestaurants();

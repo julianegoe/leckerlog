@@ -6,8 +6,11 @@ import { VitePWA } from 'vite-plugin-pwa'
 // https://vitejs.dev/config/
 export default defineConfig({
   base: './',
-  plugins: [vue(), svgLoader(), VitePWA({ 
-    registerType: 'autoUpdate', 
+  plugins: [vue(), svgLoader(), VitePWA({
+    strategies: 'injectManifest',
+    srcDir: 'src',
+    filename: 'service-worker.js',
+    registerType: 'autoUpdate',
     devOptions: {
       enabled: true
     },
@@ -34,6 +37,6 @@ export default defineConfig({
           purpose: 'any maskable'
         }
       ]
-    }
+    },
   })]
 })
