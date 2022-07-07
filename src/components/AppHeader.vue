@@ -1,9 +1,8 @@
 <script lang="ts" setup>
   import {computed} from "vue";
-  import type { User } from "firebase/auth";
   import {auth} from "../firebase";
 
-  const currentUser = computed<User | null>(() => {
+  const currentUser = computed(() => {
     return auth.currentUser;
   });
 </script>
@@ -12,7 +11,7 @@
     <slot></slot>
 <!--    right side-->
     <div>
-      <img class="w-10 rounded-full" :src="currentUser.photoURL" alt="profile-image">
+      <img class="w-10 rounded-full" :src="currentUser.photoURL || '#'" alt="profile-image">
     </div>
   </header>
 </template>
