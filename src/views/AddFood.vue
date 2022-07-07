@@ -5,12 +5,13 @@ import AppNumberInput from '../components/AppNumberInput.vue';
 import { addFoodToData } from '../services/DataService';
 import { LeckerLog } from '../types/types';
 import { useUser } from '../store/user';
-import { storage } from '../firebase/index';
+import { storage } from '../firebase';
 import { ref, uploadBytes} from "firebase/storage";
 import { Timestamp } from 'firebase/firestore';
 import AppDateInput from '../components/AppDateInput.vue';
 import GooglePlacesTextInput from '../components/GooglePlacesTextInput.vue';
 import AppHeader from "../components/AppHeader.vue";
+import AppStarRatingInput from "../components/AppStarRatingInput.vue";
 
 const userStore = useUser()
 
@@ -52,6 +53,7 @@ const handlePhotoChange = (e: any) => {
     arrayBuffer.value = result;
   });
 };
+
 const addFood = () => {
   const imageRef = ref(storage, `images/${inputValues.value.restaurant.foodOrdered[0].fileName}`);
   uploadBytes(imageRef, arrayBuffer.value, {
@@ -74,8 +76,8 @@ const addFood = () => {
  -->            <AppTextInput v-model="inputValues.restaurant.cuisine" label="Küche" id="cuisine-input"/>
             <AppTextInput v-model="inputValues.restaurant.foodOrdered[0].name" label="Gericht" id="meal-input"/>
             <AppDateInput v-model="inputValues.restaurant.foodOrdered[0].dateCreated" label="Bestellt am" id="date-input" />
-            <AppNumberInput v-model="inputValues.restaurant.foodOrdered[0].rating" label="Bewertung" id="rating-input"/>
             <AppTextInput v-model="inputValues.restaurant.foodOrdered[0].comment" label="Kommentar" id="comment-input"/>
+            <AppStarRatingInput @change:stars="(value) => inputValues.restaurant.foodOrdered[0].rating = value" />
             <div class="py-4">
               <label for="file-upload" class="mt-4 p-2 border border-black active:bg-gray-200">Bild auswählen</label>
               <img v-if="imageFile" class="mt-4" :src="imageFile" alt="selected-image" />
