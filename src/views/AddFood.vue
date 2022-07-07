@@ -10,6 +10,7 @@ import { ref, uploadBytes} from "firebase/storage";
 import { Timestamp } from 'firebase/firestore';
 import AppDateInput from '../components/AppDateInput.vue';
 import GooglePlacesTextInput from '../components/GooglePlacesTextInput.vue';
+import AppHeader from "../components/AppHeader.vue";
 
 const userStore = useUser()
 
@@ -63,6 +64,9 @@ const addFood = () => {
 
 </script>
 <template>
+  <AppHeader>
+    <div class="text-xl font-bold">LeckerLog</div>
+  </AppHeader>
     <div class="m-auto p-2">
         <form @submit.prevent="addFood">
             <GooglePlacesTextInput @update:restaurant="(value) => inputValues.restaurant.name = value" label="Restaurant" id="restaurant-input"/>

@@ -1,8 +1,10 @@
 <script lang="ts" setup>
-import { onBeforeMount } from 'vue';
+import {computed, onBeforeMount} from 'vue';
 import FoodCard from '../components/FoodCard.vue';
 import BackIcon from '../assets/icons/chevron-left.svg';
+import AppHeader from '../components/AppHeader.vue';
 import { useFood } from '../store/food';
+import {auth} from "../firebase";
 
 const foodStore = useFood();
 
@@ -16,14 +18,14 @@ onBeforeMount(async () => {
 });
 </script>
 <template>
-<header class="flex items-center p-2">
+<AppHeader>
     <div class="pr-2">
         <RouterLink :to="{name: 'Home'}">
             <BackIcon class="hover:transition-transform hover:scale-125 hover:ease-in" />
         </RouterLink>
     </div>
     <div class="font-bold text-lg">{{ restaurant }}</div>
-</header>
+</AppHeader>
 <div v-if="!foodStore.getFoodIsLoading" class="flex flex-col gap-4 m-auto p-2">
     <FoodCard v-for="(food, index) in foodStore.foodOrdered" :key="`${index}-${food.name}`" :menu-item="food.name" :rating="food.rating" :comment="food.comment" :date="food.dateCreated" :file-name="food.fileName" />
 </div>

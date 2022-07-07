@@ -1,10 +1,9 @@
 <script lang="ts" setup>
 import {computed, onMounted, ref} from 'vue';
 import { auth } from '../firebase';
-import { setPersistence, browserLocalPersistence, signInWithPopup, signInWithRedirect } from "firebase/auth";
+import { setPersistence, browserLocalPersistence, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { useUser } from '../store/user';
 import GoogleSignInButton from '../components/GoogleSignInButton.vue';
-import { GoogleAuthProvider } from "firebase/auth";
 import { useRouter } from 'vue-router';
 
 
