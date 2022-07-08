@@ -11,7 +11,7 @@
     <slot></slot>
 <!--    right side-->
     <div>
-      <img class="w-10 rounded-full" :src="currentUser.photoURL || '#'" alt="profile-image">
+      <img class="w-8 rounded-full" :src="currentUser.photoURL || '#'" alt="profile-image">
     </div>
   </header>
 </template>

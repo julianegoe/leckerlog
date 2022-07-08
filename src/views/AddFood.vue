@@ -12,6 +12,7 @@ import AppDateInput from '../components/AppDateInput.vue';
 import GooglePlacesTextInput from '../components/GooglePlacesTextInput.vue';
 import AppHeader from "../components/AppHeader.vue";
 import AppStarRatingInput from "../components/AppStarRatingInput.vue";
+import router from "../router";
 
 const userStore = useUser()
 
@@ -60,8 +61,8 @@ const addFood = () => {
     contentType: 'image/jpeg',
   }).then((snapshot) => {
     console.log('Uploaded a blob or file!', snapshot);
-  });
     addFoodToData(inputValues.value);
+  });
 };
 
 </script>
