@@ -23,7 +23,6 @@ export const addFoodToData = async (newEntry: LeckerLog) => {
                 ...newEntry.restaurant.foodOrdered[0],
                 dateCreated: newEntry.restaurant.foodOrdered[0].dateCreated,
             });
-            window.alert('Gericht hinzugefügt')
         } catch(error) {
             console.log(error)
         }

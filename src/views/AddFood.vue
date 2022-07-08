@@ -12,9 +12,10 @@ import AppDateInput from '../components/AppDateInput.vue';
 import GooglePlacesTextInput from '../components/GooglePlacesTextInput.vue';
 import AppHeader from "../components/AppHeader.vue";
 import AppStarRatingInput from "../components/AppStarRatingInput.vue";
-import router from "../router";
+import {useFood} from "../store/food";
 
-const userStore = useUser()
+const userStore = useUser();
+const foodStore = useFood();
 
 const inputValues = computed<LeckerLog>(() => (
   {
@@ -56,12 +57,15 @@ const handlePhotoChange = (e: any) => {
 };
 
 const addFood = () => {
+  foodStore.isUploading = true;
   const imageRef = ref(storage, `images/${inputValues.value.restaurant.foodOrdered[0].fileName}`);
   uploadBytes(imageRef, arrayBuffer.value, {
     contentType: 'image/jpeg',
   }).then((snapshot) => {
     console.log('Uploaded a blob or file!', snapshot);
     addFoodToData(inputValues.value);
+    foodStore.isUploading = false;
+    window.alert('Gericht hinzugefügt')
   });
 };
 

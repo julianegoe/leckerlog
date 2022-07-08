@@ -14,6 +14,7 @@ export const useFood = defineStore('food', {
             foodOrdered: [] as FoodOrdered[],
             getFoodIsLoading: true,
             getRestaurantsIsLoading: true,
+            isUploading: false,
         }
     },
     actions: {
