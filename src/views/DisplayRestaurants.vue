@@ -9,12 +9,11 @@ import { useFood } from "../store/food";
 import {useUser} from "../store/user";
 import {Restaurant} from "../types/types";
 import { deleteRestaurant } from '../services/DataService';
-import AppModal from "../components/AppModal.vue";
 
 const foodStore = useFood();
 const userStore = useUser();
 
-const restaurants = computed(() => {
+const restaurants = computed<Restaurant[]>(() => {
  return foodStore.restaurants
 })
 
@@ -46,7 +45,7 @@ onUnmounted(() => unsubscribe.value());
     <div class="text-xl font-bold">LeckerLog</div>
   </AppHeader>
     <div v-if="!foodStore.getRestaurantsIsLoading" class="flex flex-col gap-6 m-auto p-2">
-      <RestaurantCard @delete="handleDelete(entry.name)" v-for="(entry, index) in restaurants" :key="`${index}-entry`" :lecker-log="entry" :doc-id="entry.restaurantId" />
+      <RestaurantCard @delete="handleDelete(entry.restaurantId)" v-for="(entry, index) in restaurants" :key="`${index}-entry`" :lecker-log="entry" :doc-id="entry.restaurantId" />
       </div>
     <AppEmptyState v-else-if="restaurants.length === 0 && !foodStore.getRestaurantsIsLoading" />
 <!--    Skeleton-->

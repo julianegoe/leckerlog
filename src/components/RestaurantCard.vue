@@ -28,7 +28,7 @@ const handleDelete = () => {
     <Transition name="jump">
       <AppModal v-if="showModal" @delete="handleDelete" @close="showModal = false" text="Willst du dieses Restaurant mit allen Gerichten endgültig löschen?" />
     </Transition>
-    <RouterLink :to="{name: 'Food', params: { id: docId, restaurant: leckerLog.name}}">
+    <RouterLink :to="{name: 'Food', params: { id: docId, restaurantId: leckerLog.restaurantId, restaurantName: leckerLog.name}}">
       <div>
         <div v-if="leckerLog.lastUpdated" class="text-xs text-gray-500">zuletzt aktualisiert: {{ localeDateString }}</div>
         <h1 class="text-lg font-bold pb-2">{{ leckerLog.name }}</h1>
