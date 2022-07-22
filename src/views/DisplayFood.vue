@@ -53,7 +53,21 @@ onUnmounted(() => unsubscribe.value());
     <div class="font-bold text-lg">{{ restaurant }}</div>
 </AppHeader>
 <div v-if="!foodStore.getFoodIsLoading" class="flex flex-col gap-4 m-auto p-2">
-  <AppModal v-if="showModal" @delete="deleteDocument = true" @close="showModal = false" text="Willst du dieses Gericht endgültig löschen?" />
+  <Transition name="jump">
+    <AppModal v-if="showModal" @delete="deleteDocument = true" @close="showModal = false" text="Willst du dieses Gericht endgültig löschen?" />
+  </Transition>
     <FoodCard @delete="handleDelete(restaurant, food.foodId)" v-for="(food, index) in foodStore.foodOrdered" :key="`${index}-${food.name}`" :menu-item="food.name" :rating="food.rating" :comment="food.comment" :date="food.dateCreated" :file-name="food.fileName" />
 </div>
 </template>
+<style scoped>
+.jump-enter-active,
+.jump-leave-active {
+  transition: transform 0.5s ease;
+}
+
+.jump-enter-from,
+.jump-leave-to {
+  transform: translateY(200%);
+}
+
+</style>
