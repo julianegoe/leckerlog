@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, onUnmounted, ref} from 'vue';
+import {onMounted, onUnmounted, ref, watch} from 'vue';
 import FoodCard from '../components/FoodCard.vue';
 import BackIcon from '../assets/icons/chevron-left.svg';
 import AppHeader from '../components/AppHeader.vue';
@@ -22,8 +22,8 @@ const props = defineProps<{
 const unsubscribe = ref();
 onMounted(async () => {
   const q = query(collection(db, `Restaurants/${props.id}/foodOrdered`));
-  const updatedFoods: FoodOrdered[] = []
   unsubscribe.value = onSnapshot(q, (querySnapshot) => {
+    const updatedFoods: FoodOrdered[] = []
     querySnapshot.forEach((doc) => {
       updatedFoods.push(doc.data() as FoodOrdered);
       foodStore.setFoodOrdered(updatedFoods);
@@ -32,12 +32,14 @@ onMounted(async () => {
 });
 
 const showModal = ref(false);
-const deleteDocument = ref(false);
+const docToDelete = ref();
 const handleDelete = (entry: string, id: string) => {
   showModal.value = true;
-  if (deleteDocument.value) {
-    deleteFoodOrdered(entry, id)
-  }
+  console.log(entry, id);
+  docToDelete.value = {
+    entry,
+    id,
+  };
 }
 
 onUnmounted(() => unsubscribe.value());
@@ -53,9 +55,12 @@ onUnmounted(() => unsubscribe.value());
     <div class="font-bold text-lg">{{ restaurant }}</div>
 </AppHeader>
 <div v-if="!foodStore.getFoodIsLoading" class="flex flex-col gap-4 m-auto p-2">
-  <Transition name="jump">
-    <AppModal v-if="showModal" @delete="deleteDocument = true" @close="showModal = false" text="Willst du dieses Gericht endgültig löschen?" />
-  </Transition>
+    <Transition name="jump">
+      <AppModal v-if="showModal" @delete="() => {
+        deleteFoodOrdered(docToDelete.entry, docToDelete.id);
+        showModal = false;
+      }" @close="showModal = false" text="Willst du dieses Gericht endgültig löschen?" />
+    </Transition>
     <FoodCard @delete="handleDelete(restaurant, food.foodId)" v-for="(food, index) in foodStore.foodOrdered" :key="`${index}-${food.name}`" :menu-item="food.name" :rating="food.rating" :comment="food.comment" :date="food.dateCreated" :file-name="food.fileName" />
 </div>
 </template>

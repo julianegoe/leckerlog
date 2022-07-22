@@ -35,15 +35,13 @@ onMounted(async () => {
 });
 
 const showModal = ref(false);
-const deleteDocument = ref(false);
+const docToDelete = ref();
 const handleDelete = (entry: string) => {
   showModal.value = true;
-  if (deleteDocument.value) {
-    deleteRestaurant(entry)
-  }
+  docToDelete.value = entry;
 }
 
-onUnmounted(() => unsubscribe.value())
+onUnmounted(() => unsubscribe.value());
 
 
 </script>
@@ -53,7 +51,10 @@ onUnmounted(() => unsubscribe.value())
   </AppHeader>
     <div v-if="!foodStore.getRestaurantsIsLoading" class="flex flex-col gap-6 m-auto p-2">
       <Transition name="jump">
-        <AppModal v-if="showModal" @delete="deleteDocument = true" @close="showModal = false" text="Willst du dieses Restaurant mit allen Gerichten endgültig löschen?" />
+        <AppModal v-if="showModal" @delete="() => {
+        deleteRestaurant(docToDelete);
+        showModal = false;
+      }" @close="showModal = false" text="Willst du dieses Restaurant mit allen Gerichten endgültig löschen?" />
       </Transition>
       <RestaurantCard @delete="handleDelete(entry.name)" v-for="(entry, index) in restaurants" :key="`${index}-entry`" :lecker-log="entry" :doc-id="entry.restaurantId" />
       </div>

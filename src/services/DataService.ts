@@ -70,7 +70,6 @@ export const addFoodToData = async (newEntry: LeckerLog) => {
 }
 
 export const deleteFoodOrdered = async (restaurantName: string, foodId: string) => {
-    const foodStore = useFood();
     const restaurantDocId = await getRestaurantDocId(restaurantName);
     const foodDocId = await getFoodDocId(restaurantName, foodId);
     const path = `Restaurants/${restaurantDocId}/foodOrdered/${foodDocId}`;
@@ -78,10 +77,7 @@ export const deleteFoodOrdered = async (restaurantName: string, foodId: string) 
     const docRef = doc(db, path)
     deleteDoc(docRef)
         .then(() => {
-            const updatedFood = foodStore.foodOrdered.filter((food: FoodOrdered) => {
-                return food.foodId !== foodId;
-            })
-            foodStore.setFoodOrdered(updatedFood);
+            console.log('deleted')
         })
         .catch(() => {
             console.log('error')
