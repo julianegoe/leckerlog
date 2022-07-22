@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {computed, ref as vref} from 'vue';
+import {computed, reactive, ref as vref} from 'vue';
 import AppTextInput from '../components/AppTextInput.vue';
 import { addFoodToData } from '../services/DataService';
 import { LeckerLog } from '../types/types';
@@ -12,6 +12,7 @@ import GooglePlacesTextInput from '../components/GooglePlacesTextInput.vue';
 import AppHeader from "../components/AppHeader.vue";
 import AppStarRatingInput from "../components/AppStarRatingInput.vue";
 import {useFood} from "../store/food";
+import exifr from 'exifr'
 
 const userStore = useUser();
 const foodStore = useFood();
@@ -20,14 +21,14 @@ const foodStore = useFood();
 const inputValues = computed<LeckerLog>(() => (
   {
     restaurant: {
-      restaurantId: '',
+      restaurantId: '', // document ID of restaurant
       dateCreated: Timestamp.fromDate(new Date()),
       lastUpdated: Timestamp.fromDate(new Date()),
       name: '',
       userId: userStore.userId,
       cuisine: '',
       foodOrdered: [{
-        foodId: '',
+        foodId: '', // document ID of ordered food
         userId: userStore.userId,
         dateCreated: '',
         name: '',
@@ -41,8 +42,24 @@ const inputValues = computed<LeckerLog>(() => (
 
 const arrayBuffer = vref();
 const imageFile = vref();
+let exifGpsData = vref({
+  GPSLatitude: [52, 31, 12.0288],
+  GPSLatitudeRef: 'N',
+  GPSLongitude: [13, 24, 17.8344],
+  GPSLongitudeRef: 'E',
+})
 const handlePhotoChange = (e: any) => {
   const fileList = e.target?.files;
+  exifr.parse(fileList[0])
+      .then(output => {
+        if (!output) {
+          return
+        }
+        exifGpsData.value.GPSLatitude = output.GPSLatitude;
+        exifGpsData.value.GPSLatitudeRef = output.GPSLatitudeRef;
+        exifGpsData.value.GPSLongitude = output.GPSLongitude;
+        exifGpsData.value.GPSLongitudeRef = output.GPSLongitudeRef;
+      });
   inputValues.value.restaurant.foodOrdered[0].fileName = fileList[0].name;
   imageFile.value = URL.createObjectURL(fileList[0]);
   // Check if the file is an image.
@@ -76,9 +93,15 @@ const addFood = () => {
   </AppHeader>
     <div class="m-auto p-2">
         <form @submit.prevent="addFood">
-            <GooglePlacesTextInput @update:restaurant="(value) => inputValues.restaurant.name = value" label="Restaurant" id="restaurant-input"/>
-<!--             <AppTextInput v-model="inputValues.restaurant.name" label="Restaurant" id="restaurant-input"/>
- -->            <AppTextInput v-model="inputValues.restaurant.cuisine" label="Küche" id="cuisine-input"/>
+            <GooglePlacesTextInput @update:restaurant="(value) => inputValues.restaurant.name = value"
+                                   label="Restaurant"
+                                   id="restaurant-input"
+                                   :latitude="exifGpsData.GPSLatitude"
+                                   :latitude-direction="exifGpsData.GPSLatitudeRef"
+                                   :longitude="exifGpsData.GPSLongitude"
+                                   :longitude-direction="exifGpsData.GPSLongitudeRef"
+                                   />
+            <AppTextInput v-model="inputValues.restaurant.cuisine" label="Küche" id="cuisine-input"/>
             <AppTextInput v-model="inputValues.restaurant.foodOrdered[0].name" label="Gericht" id="meal-input"/>
             <AppDateInput v-model="inputValues.restaurant.foodOrdered[0].dateCreated" label="Bestellt am" id="date-input" />
             <AppTextInput v-model="inputValues.restaurant.foodOrdered[0].comment" label="Kommentar" id="comment-input"/>
