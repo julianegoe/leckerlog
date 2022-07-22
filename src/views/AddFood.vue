@@ -12,7 +12,7 @@ import GooglePlacesTextInput from '../components/GooglePlacesTextInput.vue';
 import AppHeader from "../components/AppHeader.vue";
 import AppStarRatingInput from "../components/AppStarRatingInput.vue";
 import {useFood} from "../store/food";
-import exifr from 'exifr'
+import exifr from 'exifr';
 
 const userStore = useUser();
 const foodStore = useFood();
@@ -43,9 +43,9 @@ const inputValues = computed<LeckerLog>(() => (
 const arrayBuffer = vref();
 const imageFile = vref();
 let exifGpsData = vref({
-  GPSLatitude: [52, 31, 12.0288],
+  GPSLatitude: [52, 31, 12.0288] as [number, number, number],
   GPSLatitudeRef: 'N',
-  GPSLongitude: [13, 24, 17.8344],
+  GPSLongitude: [13, 24, 17.8344] as [number, number, number],
   GPSLongitudeRef: 'E',
 })
 const handlePhotoChange = (e: any) => {

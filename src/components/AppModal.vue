@@ -1,6 +1,5 @@
 <script lang="ts" setup>
-  import {defineEmits} from "vue";
-  const emits = defineEmits(['close', 'delete'])
+  defineEmits(['close', 'delete'])
   defineProps<{
     text: string
   }>()
