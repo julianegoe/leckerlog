@@ -10,7 +10,6 @@ export const useUser = defineStore('user', {
           userId: '',
           displayName: '',
           email: ''
-
         }
       },
 })

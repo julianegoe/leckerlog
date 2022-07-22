@@ -1,21 +1,47 @@
 <script lang="ts" setup>
-import {computed, onBeforeMount} from 'vue';
+import { onMounted, onUnmounted, ref} from 'vue';
 import FoodCard from '../components/FoodCard.vue';
 import BackIcon from '../assets/icons/chevron-left.svg';
 import AppHeader from '../components/AppHeader.vue';
 import { useFood } from '../store/food';
-import {auth} from "../firebase";
+import {deleteFoodOrdered} from '../services/DataService';
+import {collection, onSnapshot, query } from "firebase/firestore";
+import {db} from "../firebase";
+import { FoodOrdered } from "../types/types";
+import {useUser} from "../store/user";
+import AppModal from "../components/AppModal.vue";
 
 const foodStore = useFood();
+const userStore = useUser();
 
 const props = defineProps<{
     id: string;
     restaurant: string;
 }>();
 
-onBeforeMount(async () => {
-    await foodStore.getFoodOrdered(props.id);
+const unsubscribe = ref();
+onMounted(async () => {
+  const q = query(collection(db, `Restaurants/${props.id}/foodOrdered`));
+  const updatedFoods: FoodOrdered[] = []
+  unsubscribe.value = onSnapshot(q, (querySnapshot) => {
+    querySnapshot.forEach((doc) => {
+      updatedFoods.push(doc.data() as FoodOrdered);
+      foodStore.setFoodOrdered(updatedFoods);
+    });
+  });
 });
+
+const showModal = ref(false);
+const deleteDocument = ref(false);
+const handleDelete = (entry: string, id: string) => {
+  showModal.value = true;
+  if (deleteDocument.value) {
+    deleteFoodOrdered(entry, id)
+  }
+}
+
+onUnmounted(() => unsubscribe.value());
+
 </script>
 <template>
 <AppHeader>
@@ -27,6 +53,7 @@ onBeforeMount(async () => {
     <div class="font-bold text-lg">{{ restaurant }}</div>
 </AppHeader>
 <div v-if="!foodStore.getFoodIsLoading" class="flex flex-col gap-4 m-auto p-2">
-    <FoodCard v-for="(food, index) in foodStore.foodOrdered" :key="`${index}-${food.name}`" :menu-item="food.name" :rating="food.rating" :comment="food.comment" :date="food.dateCreated" :file-name="food.fileName" />
+  <AppModal v-if="showModal" @delete="deleteDocument = true" @close="showModal = false" text="Willst du dieses Gericht endgültig löschen?" />
+    <FoodCard @delete="handleDelete(restaurant, food.foodId)" v-for="(food, index) in foodStore.foodOrdered" :key="`${index}-${food.name}`" :menu-item="food.name" :rating="food.rating" :comment="food.comment" :date="food.dateCreated" :file-name="food.fileName" />
 </div>
 </template>

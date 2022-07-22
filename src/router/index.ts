@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUser } from '../store/user';
-import { auth } from '../firebase';
 import DisplayRestaurants from '/src/views/DisplayRestaurants.vue'
+import {auth} from "../firebase";
 const routes = [
     {
         path: '/',
@@ -35,8 +35,8 @@ router.beforeEach(async (to, from) => {
         return { name: 'Login' };
       }
       return true;
-    
+
   })
-  
-  
+
+
 export default router

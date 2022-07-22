@@ -28,7 +28,7 @@ const signInWithGoogle = () => {
 }
 
 onMounted(() => {
-  auth.onAuthStateChanged(function(user) {
+  auth.onAuthStateChanged((user) => {
     if (user) {
       userStore.$patch({
         isAuthenticated: true,
@@ -44,11 +44,6 @@ onMounted(() => {
 <template>
 <h1 class="text-2xl font-bold text-center mb-4">Leckerlog!</h1>
   <div class="flex flex-col items-center gap-4">
-    <!-- <div>
-    <RouterLink :to="{ name: 'Home' }">
-        <AppSignInButton @click="signIn" />
-    </RouterLink>
-  </div> -->
   <div>
       <GoogleSignInButton @click="signInWithGoogle" />
   </div>

@@ -1,6 +1,8 @@
 import type { Timestamp } from "firebase/firestore";
 
 export interface FoodOrdered {
+    foodId: string;
+    userId: string;
     name: string;
     rating: number;
     fileName?: string;
@@ -10,7 +12,8 @@ export interface FoodOrdered {
 
 export interface Restaurant {
     restaurantId: string;
-    dateCreated: any;
+    dateCreated: Timestamp;
+    lastUpdated: Timestamp;
     userId: string;
     name: string;
     foodOrdered: FoodOrdered[];

@@ -2,7 +2,7 @@
 import StarIcon from '../assets/icons/star.svg'
 import {computed, onMounted, ref as vref} from 'vue';
 import {getDownloadURL, getStorage, ref} from "firebase/storage";
-import {Timestamp} from "@firebase/firestore";
+import TrashIcon from '../assets/icons/trash.svg';
 
 const props = defineProps<{
     menuItem: string;
@@ -10,7 +10,9 @@ const props = defineProps<{
     fileName?: string;
     comment?: string;
     date?: string;
-}>()
+}>();
+
+defineEmits(['delete']);
 
 const localeDateString = computed(() => {
     if (props.date) {
@@ -53,17 +55,24 @@ onMounted(() => {
                 <div v-if="date" class="text-xs">{{ localeDateString }}</div>
                 <div class="font-bold text-lg">{{ menuItem }}</div>
             </li>
+          <li>
+            <div class="flex pt-2">
+              <StarIcon class="w-6" v-for="n in rating" :key="`${n}-star-rating`" />
+            </div>
+          </li>
+          <li>
+            <div v-if="comment" class="pt-2">"{{ comment }}"</div>
+          </li>
         </ul>
-        <div class="flex pt-2">
-          <StarIcon class="w-6" v-for="n in rating" :key="`${n}-star-rating`" />
-        </div>
-        <div v-if="comment" class="pt-2">"{{ comment }}"</div>
     </div>
     <div v-if="!loadingImage" class="w-1/2">
         <img class="object-fill" :src="imageUrl" :alt="menuItem" />
     </div>
     <div v-else-if="fileName && loadingImage" class="w-1/2">
       <div class="object-fit max-w-[1500px] h-[100px] bg-gray-100 animate-pulse"></div>
+    </div>
+    <div class="self-start flex flex-col gap-y-4">
+      <TrashIcon @click="$emit('delete')" class="w-8 text-gray-700" />
     </div>
 </div>
 </template>

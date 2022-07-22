@@ -8,9 +8,7 @@ const route = useRoute();
 
 <template>
   <main class="h-[calc(100vh-5rem)] overflow-y-scroll">
-    <AppLayout>
       <RouterView />
-    </AppLayout>
   </main>
   <AppFooter v-if="route.name !== 'Login'" />
 </template>

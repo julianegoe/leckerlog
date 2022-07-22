@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import {computed, ref as vref} from 'vue';
 import AppTextInput from '../components/AppTextInput.vue';
-import AppNumberInput from '../components/AppNumberInput.vue';
 import { addFoodToData } from '../services/DataService';
 import { LeckerLog } from '../types/types';
 import { useUser } from '../store/user';
@@ -17,15 +16,18 @@ import {useFood} from "../store/food";
 const userStore = useUser();
 const foodStore = useFood();
 
+
 const inputValues = computed<LeckerLog>(() => (
   {
     restaurant: {
       restaurantId: '',
       dateCreated: Timestamp.fromDate(new Date()),
+      lastUpdated: Timestamp.fromDate(new Date()),
       name: '',
       userId: userStore.userId,
       cuisine: '',
       foodOrdered: [{
+        foodId: '',
         userId: userStore.userId,
         dateCreated: '',
         name: '',
@@ -51,8 +53,7 @@ const handlePhotoChange = (e: any) => {
   const reader = new FileReader();
   reader.readAsArrayBuffer(fileList[0])
   reader.addEventListener('load', (event) => {
-    const result = event.target?.result;
-    arrayBuffer.value = result;
+    arrayBuffer.value = event.target?.result;
   });
 };
 
@@ -62,7 +63,6 @@ const addFood = () => {
   uploadBytes(imageRef, arrayBuffer.value, {
     contentType: 'image/jpeg',
   }).then((snapshot) => {
-    console.log('Uploaded a blob or file!', snapshot);
     addFoodToData(inputValues.value);
     foodStore.isUploading = false;
     window.alert('Gericht hinzugefügt')
