@@ -29,17 +29,13 @@ onMounted(async () => {
         restaurantId: doc.id,
       });
     });
-    console.log('write to store..', updatedRestaurants);
     foodStore.setRestaurants(updatedRestaurants);
   });
 });
 
-const showModal = ref(false);
-const docToDelete = ref();
 const handleDelete = (entry: string) => {
-  showModal.value = true;
-  docToDelete.value = entry;
-}
+  deleteRestaurant(entry)
+};
 
 onUnmounted(() => unsubscribe.value());
 
@@ -50,12 +46,6 @@ onUnmounted(() => unsubscribe.value());
     <div class="text-xl font-bold">LeckerLog</div>
   </AppHeader>
     <div v-if="!foodStore.getRestaurantsIsLoading" class="flex flex-col gap-6 m-auto p-2">
-      <Transition name="jump">
-        <AppModal v-if="showModal" @delete="() => {
-        deleteRestaurant(docToDelete);
-        showModal = false;
-      }" @close="showModal = false" text="Willst du dieses Restaurant mit allen Gerichten endgültig löschen?" />
-      </Transition>
       <RestaurantCard @delete="handleDelete(entry.name)" v-for="(entry, index) in restaurants" :key="`${index}-entry`" :lecker-log="entry" :doc-id="entry.restaurantId" />
       </div>
     <AppEmptyState v-else-if="restaurants.length === 0 && !foodStore.getRestaurantsIsLoading" />
@@ -64,15 +54,3 @@ onUnmounted(() => unsubscribe.value());
       <div v-for="n in 3" :key="`restaurant-skeleton-${n}`" class="w-full h-32 bg-gray-300 animate-pulse mb-2"></div>
     </div>
 </template>
-<style scoped>
-.jump-enter-active,
-.jump-leave-active {
-  transition: transform 0.5s ease;
-}
-
-.jump-enter-from,
-.jump-leave-to {
-  transform: translateY(200%);
-}
-
-</style>

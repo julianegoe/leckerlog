@@ -4,15 +4,12 @@ import FoodCard from '../components/FoodCard.vue';
 import BackIcon from '../assets/icons/chevron-left.svg';
 import AppHeader from '../components/AppHeader.vue';
 import { useFood } from '../store/food';
-import {deleteFoodOrdered} from '../services/DataService';
+import {deleteFoodOrdered, deleteRestaurant} from '../services/DataService';
 import {collection, onSnapshot, query } from "firebase/firestore";
 import {db} from "../firebase";
 import { FoodOrdered } from "../types/types";
-import {useUser} from "../store/user";
-import AppModal from "../components/AppModal.vue";
 
 const foodStore = useFood();
-const userStore = useUser();
 
 const props = defineProps<{
     id: string;
@@ -31,15 +28,8 @@ onMounted(async () => {
   });
 });
 
-const showModal = ref(false);
-const docToDelete = ref();
 const handleDelete = (entry: string, id: string) => {
-  showModal.value = true;
-  console.log(entry, id);
-  docToDelete.value = {
-    entry,
-    id,
-  };
+  deleteFoodOrdered(entry, id);
 }
 
 onUnmounted(() => unsubscribe.value());
@@ -55,24 +45,6 @@ onUnmounted(() => unsubscribe.value());
     <div class="font-bold text-lg">{{ restaurant }}</div>
 </AppHeader>
 <div v-if="!foodStore.getFoodIsLoading" class="flex flex-col gap-4 m-auto p-2">
-    <Transition name="jump">
-      <AppModal v-if="showModal" @delete="() => {
-        deleteFoodOrdered(docToDelete.entry, docToDelete.id);
-        showModal = false;
-      }" @close="showModal = false" text="Willst du dieses Gericht endgültig löschen?" />
-    </Transition>
     <FoodCard @delete="handleDelete(restaurant, food.foodId)" v-for="(food, index) in foodStore.foodOrdered" :key="`${index}-${food.name}`" :menu-item="food.name" :rating="food.rating" :comment="food.comment" :date="food.dateCreated" :file-name="food.fileName" />
 </div>
 </template>
-<style scoped>
-.jump-enter-active,
-.jump-leave-active {
-  transition: transform 0.5s ease;
-}
-
-.jump-enter-from,
-.jump-leave-to {
-  transform: translateY(200%);
-}
-
-</style>
