@@ -36,7 +36,6 @@ onMounted(async () => {
     const autocompleteService = new google.maps.places.AutocompleteService();
     const placesService = new google.maps.places.PlacesService(nearbyRef.value);
     watch(searchQuery, (value, prevValue) => {
-      hasSelected.value = false;
       autocompleteService.getPlacePredictions({
         input: searchQuery.value,
         types: ['restaurant', 'cafe', 'night_club', 'bakery', 'food' ],
@@ -58,8 +57,8 @@ onMounted(async () => {
       }
       placesService.nearbySearch({
         location: googleLocation.value,
-        radius: 100,
-        type: 'food',
+        rankBy: google.maps.places.RankBy.DISTANCE,
+        type: 'restaurant',
       }, (results: any, status: string) => {
         if (status === 'OK') {
           googleNearbySearch.value = results;
@@ -72,8 +71,8 @@ const handleSelection = (value: string) => {
   emit('update:restaurant', value)
   googlePredictions.value = [];
   googleNearbySearch.value = [];
-  hasSelected.value = true;
   searchQuery.value = value;
+  hasSelected.value = true;
 };
 </script>
 <template>
@@ -93,7 +92,7 @@ const handleSelection = (value: string) => {
       <div v-else-if="googleNearbySearch.length > 0" class="border border-black">
         <div class="cursor-pointer hover:bg-gray-200 p-2"
              @click="handleSelection(place.name)"
-             v-for="(place, index) in googleNearbySearch.slice(1, 6)" :key="place.place_id">
+             v-for="(place, index) in googleNearbySearch.slice(1, 7)" :key="place.place_id">
           <div>{{ place.name }}</div>
           <div class="text-xs text-gray-400">{{ place.vicinity }}</div>
         </div>
